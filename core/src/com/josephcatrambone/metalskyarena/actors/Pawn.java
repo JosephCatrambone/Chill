@@ -16,6 +16,7 @@ import static com.josephcatrambone.metalskyarena.PhysicsConstants.PPM;
  */
 public class Pawn extends Actor {
 	public enum State {SPAWNED, MOVING, HIT, DEAD, NUM_STATES};
+	public enum Direction {RIGHT, UP, LEFT, DOWN, NUM_DIRECTIONS}; // Purely graphical, doesn't impact physics body.
 
 	// Sounds
 
@@ -23,10 +24,11 @@ public class Pawn extends Actor {
 	// Animation
 	public final String SPRITE_SHEET_FILENAME = "missing.png";
 	Texture spriteSheet; // Don't use Image subclass or Sprite.
-	Animation[] animations;
+	State state;
+	Direction direction;
+	Animation[][] animations; // Cartesian product of state and direction.
 
 	// Physics
-	State state;
 	Body physicsBody;
 
 	public Pawn() {
@@ -46,9 +48,11 @@ public class Pawn extends Actor {
 	public void create(float x, float y, int hw, int hh, float mass, String spriteSheetFilename) {
 		// Load graphics.
 		spriteSheet = MainGame.assetManager.get(spriteSheetFilename);
+		animations = new Animation[State.NUM_STATES.ordinal()][Direction.NUM_DIRECTIONS.ordinal()];
 
 		// Set game state.
 		state = State.SPAWNED;
+		direction = Direction.RIGHT;
 
 		// Create visible bounds.
 		this.setPosition(x, y, Align.center);
@@ -75,10 +79,6 @@ public class Pawn extends Actor {
 	public void dispose() {
 		MainGame.assetManager.unload(SPRITE_SHEET_FILENAME);
 		MainGame.world.destroyBody(this.physicsBody);
-	}
-
-	public void addDamage(int damage) {
-
 	}
 
 	@Override

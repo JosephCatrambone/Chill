@@ -42,18 +42,18 @@ public class PlayScene extends Scene {
 		stage.addActor(new Pawn(125, 100));
 		stage.addActor(new Pawn(100, 256));
 
-		// We add a global input handler so the player can shoot anywhere.
+		// Global input listener if needed.
 		stage.addListener(new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				// Stage is unprojecting the coordinates for us.
-				player.handleTouchDown(x, y, button);
 				return true;
 			}
 
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-				player.handleTouchUp(x, y, button);
 			}
 		});
+
+		player.addListener(player.getInputListener());
 
 		// TODO: When resuming, restore input processors.
 		Gdx.input.setInputProcessor(stage);

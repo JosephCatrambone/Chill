@@ -3,10 +3,7 @@ package com.josephcatrambone.metalskyarena;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.josephcatrambone.metalskyarena.scenes.PlayScene;
@@ -47,8 +44,6 @@ public class MainGame extends ApplicationAdapter {
 	public void loadAllAssets() {
 		assetManager.load("missing.png", Texture.class);
 		assetManager.load("player.png", Texture.class);
-		assetManager.load("flak.png", Texture.class);
-		assetManager.load("slug.png", Texture.class);
 		assetManager.finishLoading();
 	}
 }

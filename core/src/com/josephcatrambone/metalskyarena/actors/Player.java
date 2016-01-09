@@ -1,5 +1,7 @@
 package com.josephcatrambone.metalskyarena.actors;
 
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+
 /**
  * Created by Jo on 12/23/2015.
  */
@@ -9,11 +11,10 @@ public class Player extends Pawn {
 		super(x, y);
 	}
 
-	public void handleTouchDown(float x, float y, int button) {
+	public InputListener getInputListener() {
+		return new InputListener() {
 
-	}
-
-	public void handleTouchUp(float x, float y, int button) {
+		};
 	}
 
 }
