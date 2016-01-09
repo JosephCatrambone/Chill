@@ -8,7 +8,6 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Align;
 import com.josephcatrambone.metalskyarena.MainGame;
-import com.josephcatrambone.metalskyarena.weapons.Weapon;
 
 import static com.josephcatrambone.metalskyarena.PhysicsConstants.PPM;
 
@@ -16,12 +15,7 @@ import static com.josephcatrambone.metalskyarena.PhysicsConstants.PPM;
  * Created by Jo on 12/20/2015.
  */
 public class Pawn extends Actor {
-	public enum State {SPAWNED, IDLE, SHOOT, HIT, DEAD, NUM_STATES};
-	public enum AmmoType {NONE, FLAK, SHOT, SLUG};
-
-	// Gameplay
-	int health;
-	Weapon weapon;
+	public enum State {SPAWNED, MOVING, HIT, DEAD, NUM_STATES};
 
 	// Sounds
 
@@ -55,9 +49,6 @@ public class Pawn extends Actor {
 
 		// Set game state.
 		state = State.SPAWNED;
-
-		// Set health.
-		this.health = health;
 
 		// Create visible bounds.
 		this.setPosition(x, y, Align.center);
