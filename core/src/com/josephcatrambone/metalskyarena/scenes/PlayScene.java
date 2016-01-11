@@ -4,13 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.josephcatrambone.metalskyarena.MainGame;
 import com.josephcatrambone.metalskyarena.Level;
-import com.josephcatrambone.metalskyarena.actors.*;
+import com.josephcatrambone.metalskyarena.MainGame;
+import com.josephcatrambone.metalskyarena.actors.Pawn;
+import com.josephcatrambone.metalskyarena.actors.Player;
 
 /**
  * Created by Jo on 12/20/2015.
@@ -43,17 +42,7 @@ public class PlayScene extends Scene {
 		stage.addActor(new Pawn(100, 256));
 
 		// Global input listener if needed.
-		stage.addListener(new InputListener() {
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				// Stage is unprojecting the coordinates for us.
-				return true;
-			}
-
-			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-			}
-		});
-
-		player.addListener(player.getInputListener());
+		stage.addListener(player.getInputListener());
 
 		// TODO: When resuming, restore input processors.
 		Gdx.input.setInputProcessor(stage);
@@ -78,9 +67,13 @@ public class PlayScene extends Scene {
 		MainGame.world.step(deltaTime, 8, 3);
 		stage.act(deltaTime);
 
+		level.drawBG(camera);
+
 		// Camera follows player?
 		camera.position.set(player.getX(), player.getY(), camera.position.z);
 		camera.update();
+
+		level.drawOverlay(camera);
 	}
 
 }

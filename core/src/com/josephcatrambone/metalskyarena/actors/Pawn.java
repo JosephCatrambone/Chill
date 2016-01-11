@@ -15,7 +15,7 @@ import static com.josephcatrambone.metalskyarena.PhysicsConstants.PPM;
  * Created by Jo on 12/20/2015.
  */
 public class Pawn extends Actor {
-	public enum State {SPAWNED, MOVING, HIT, DEAD, NUM_STATES};
+	public enum State {IDLE, MOVING, HIT, DEAD, NUM_STATES};
 	public enum Direction {RIGHT, UP, LEFT, DOWN, NUM_DIRECTIONS}; // Purely graphical, doesn't impact physics body.
 
 	// Sounds
@@ -27,6 +27,7 @@ public class Pawn extends Actor {
 	State state;
 	Direction direction;
 	Animation[][] animations; // Cartesian product of state and direction.
+	float stateTime; // How long have we been in this anim state?
 
 	// Physics
 	Body physicsBody;
@@ -51,7 +52,7 @@ public class Pawn extends Actor {
 		animations = new Animation[State.NUM_STATES.ordinal()][Direction.NUM_DIRECTIONS.ordinal()];
 
 		// Set game state.
-		state = State.SPAWNED;
+		state = State.IDLE;
 		direction = Direction.RIGHT;
 
 		// Create visible bounds.
@@ -87,12 +88,18 @@ public class Pawn extends Actor {
 		Vector2 pos = physicsBody.getPosition();
 		this.setX(pos.x*PPM);
 		this.setY(pos.y*PPM);
+		stateTime += deltaTime;
 	}
 
 	@Override
 	public void draw(Batch spriteBatch, float alpha) {
 		// TODO: Won't be using getWidth() forever.  Use animation frame size around origin.
-		spriteBatch.draw(spriteSheet, this.getX()-this.getOriginX(), this.getY()-this.getOriginY(), this.getWidth(), this.getHeight());
+		Animation anim = animations[this.state.ordinal()][this.direction.ordinal()];
+		if(anim != null) {
+			spriteBatch.draw(anim.getKeyFrame(stateTime), this.getX() - this.getOriginX(), this.getY() - this.getOriginY());
+		} else {
+			spriteBatch.draw(spriteSheet, this.getX()-this.getOriginX(), this.getY()-this.getOriginY());
+		}
 	}
 
 	public Body getBody() {
