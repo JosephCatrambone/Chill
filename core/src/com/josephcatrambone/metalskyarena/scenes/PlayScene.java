@@ -8,8 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.josephcatrambone.metalskyarena.Level;
 import com.josephcatrambone.metalskyarena.MainGame;
-import com.josephcatrambone.metalskyarena.actors.Pawn;
 import com.josephcatrambone.metalskyarena.actors.Player;
+import com.josephcatrambone.metalskyarena.handlers.RegionContactListener;
 
 /**
  * Created by Jo on 12/20/2015.
@@ -21,12 +21,17 @@ public class PlayScene extends Scene {
 	Level level;
 	Player player;
 
+	RegionContactListener regionContactListener;
+
 	Box2DDebugRenderer debugRenderer;
 
 	@Override
 	public void create() {
 		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight())); // Fit viewport = black bars.
 		debugRenderer = new Box2DDebugRenderer();
+
+		regionContactListener = new RegionContactListener();
+		MainGame.world.setContactListener(regionContactListener);
 
 		// Setup camera.  Enforce y-up.
 		float invAspectRatio = stage.getHeight()/stage.getWidth();
@@ -38,9 +43,7 @@ public class PlayScene extends Scene {
 
 		player = new Player(128, 128);
 		stage.addActor(player);
-		stage.addActor(new Pawn(125, 100));
-		stage.addActor(new Pawn(100, 256));
-
+		
 		// Global input listener if needed.
 		stage.addListener(player.getInputListener());
 

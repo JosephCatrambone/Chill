@@ -13,6 +13,7 @@ import java.util.Stack;
  */
 public class Player extends Pawn {
 
+	public static final String PLAYER_USER_DATA = "player";
 	public float walkSpeed = 3.5f;
 
 	public Player(int x, int y) {
@@ -22,6 +23,10 @@ public class Player extends Pawn {
 				new TextureRegion(this.spriteSheet, 0, 0, 16, 16),
 				new TextureRegion(this.spriteSheet, 16, 0, 16, 16)};
 		animations[State.IDLE.ordinal()][Direction.DOWN.ordinal()] = new Animation(0.1f, frames);
+
+		// Always use first fixture for labelling contact data.
+		this.getBody().getFixtureList().get(0).setUserData(PLAYER_USER_DATA);
+		//this.getBody().setUserData(PLAYER_USER_DATA);
 	}
 
 	@Override

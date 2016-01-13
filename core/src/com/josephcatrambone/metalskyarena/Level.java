@@ -1,35 +1,27 @@
 package com.josephcatrambone.metalskyarena;
 
-import com.badlogic.gdx.assets.loaders.resolvers.ExternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.josephcatrambone.metalskyarena.MainGame;
 
-import static com.josephcatrambone.metalskyarena.PhysicsConstants.LEVEL_COLLISION_MASK;
 import static com.josephcatrambone.metalskyarena.PhysicsConstants.PPM;
 
 /**
  * Created by Jo on 12/22/2015.
  */
 public class Level {
-	public final int[] BACKGROUND_LAYERS = new int[]{0, 1}; // Background + foreground.  No overlay yet.
-	public final int[] OVERLAY_LAYERS = new int[]{2};
-	public final String COLLISION_LAYER = "collision";
+	public static final int[] BACKGROUND_LAYERS = new int[]{0, 1}; // Background + foreground.  No overlay yet.
+	public static final int[] OVERLAY_LAYERS = new int[]{2};
+	public static final String COLLISION_LAYER = "collision";
+	public static final String COOL_TYPE = "cool";
 	TiledMap map;
 	TiledMapRenderer renderer;
 	Body collision;
@@ -71,7 +63,16 @@ public class Level {
 			});
 			FixtureDef fdef = new FixtureDef();
 			fdef.shape = shape;
+
+			// Is this a cooling area or a collision?
+			String type = rob.getProperties().get("type", "default", String.class);
+			if(type.equals(COOL_TYPE)) {
+				fdef.isSensor = true;
+			}
+
 			Fixture f = collision.createFixture(fdef);
+			//collision.setUserData(type);
+			f.setUserData(type);
 		}
 		for(PolygonMapObject pob : mapObjects.getByType(PolygonMapObject.class)) {
 			// TODO: Poly support.
