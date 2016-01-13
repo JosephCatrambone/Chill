@@ -43,7 +43,7 @@ public class PlayScene extends Scene {
 
 		player = new Player(128, 128);
 		stage.addActor(player);
-		
+
 		// Global input listener if needed.
 		stage.addListener(player.getInputListener());
 
@@ -63,6 +63,7 @@ public class PlayScene extends Scene {
 		level.drawBG(camera);
 		stage.draw();
 		//debugRenderer.render(MainGame.world, camera.combined);
+		level.drawOverlay(camera);
 	}
 
 	@Override
@@ -70,13 +71,20 @@ public class PlayScene extends Scene {
 		MainGame.world.step(deltaTime, 8, 3);
 		stage.act(deltaTime);
 
-		level.drawBG(camera);
+		// Update player's heat.
+		if(regionContactListener.playerCooling) {
+			player.temperature -= deltaTime;
+			if(player.temperature < 0) { player.temperature = 0;  }
+		} else {
+			player.temperature += deltaTime;
+			if(player.temperature > player.maxTemperature) { player.temperature = player.maxTemperature; }
+		}
+
+		System.out.println("Player temp: " + player.temperature);
 
 		// Camera follows player?
 		camera.position.set(player.getX(), player.getY(), camera.position.z);
 		camera.update();
-
-		level.drawOverlay(camera);
 	}
 
 }

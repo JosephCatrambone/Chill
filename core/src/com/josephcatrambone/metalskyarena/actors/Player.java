@@ -2,6 +2,7 @@ package com.josephcatrambone.metalskyarena.actors;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -14,7 +15,9 @@ import java.util.Stack;
 public class Player extends Pawn {
 
 	public static final String PLAYER_USER_DATA = "player";
-	public float walkSpeed = 3.5f;
+	public float walkSpeed = 6.5f;
+	public float temperature = 0;
+	public float maxTemperature = 10f;
 
 	public Player(int x, int y) {
 		create(x, y, 8, 8, 1.0f, "player.png");
@@ -44,6 +47,17 @@ public class Player extends Pawn {
 		} else {
 			this.getBody().setLinearVelocity(0, 0);
 		}
+	}
+
+	@Override
+	public void draw(Batch spriteBatch, float alpha) {
+		// TODO: Better linear interpolation of colors using real color theory.
+		float ratio = temperature/maxTemperature + 0.1f;
+		ratio = Math.max(0.0f, Math.min(1.0f, ratio)); // Clamp.
+		float invRatio = 1.0f - ratio;
+		spriteBatch.setColor(ratio, invRatio, invRatio, 1.0f);
+		super.draw(spriteBatch, alpha);
+		spriteBatch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 
 	public InputListener getInputListener() {
