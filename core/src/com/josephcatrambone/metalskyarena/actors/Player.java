@@ -49,6 +49,23 @@ public class Player extends Pawn {
 		}
 	}
 
+	public void heat(float amount) {
+		temperature += amount;
+		if(temperature > maxTemperature) {
+			temperature = maxTemperature;
+			kill();
+		}
+	}
+
+	public void cool(float amount) {
+		temperature -= (temperature/2)*amount;
+		if(temperature < 0) { temperature = 0;  }
+	}
+
+	public void kill() {
+
+	}
+
 	@Override
 	public void draw(Batch spriteBatch, float alpha) {
 		// TODO: Better linear interpolation of colors using real color theory.

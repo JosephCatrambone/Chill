@@ -73,14 +73,10 @@ public class PlayScene extends Scene {
 
 		// Update player's heat.
 		if(regionContactListener.playerCooling) {
-			player.temperature -= deltaTime;
-			if(player.temperature < 0) { player.temperature = 0;  }
+			player.cool(deltaTime);
 		} else {
-			player.temperature += deltaTime;
-			if(player.temperature > player.maxTemperature) { player.temperature = player.maxTemperature; }
+			player.heat(deltaTime);
 		}
-
-		System.out.println("Player X: " + player.getX());
 
 		// Camera follows player?
 		camera.position.set(player.getX(), player.getY(), camera.position.z);
