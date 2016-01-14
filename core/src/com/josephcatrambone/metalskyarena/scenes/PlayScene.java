@@ -41,7 +41,7 @@ public class PlayScene extends Scene {
 
 		level = new Level("test.tmx");
 
-		player = new Player(128, 128);
+		player = new Player(level.getPlayerStartX(), level.getPlayerStartY());
 		stage.addActor(player);
 
 		// Global input listener if needed.
@@ -80,7 +80,7 @@ public class PlayScene extends Scene {
 			if(player.temperature > player.maxTemperature) { player.temperature = player.maxTemperature; }
 		}
 
-		System.out.println("Player temp: " + player.temperature);
+		System.out.println("Player X: " + player.getX());
 
 		// Camera follows player?
 		camera.position.set(player.getX(), player.getY(), camera.position.z);

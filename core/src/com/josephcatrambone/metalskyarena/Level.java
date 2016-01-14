@@ -22,6 +22,11 @@ public class Level {
 	public static final int[] OVERLAY_LAYERS = new int[]{2};
 	public static final String COLLISION_LAYER = "collision";
 	public static final String COOL_TYPE = "cool";
+	public static final String MAP_HEIGHT_PROPERTY = "height";
+	public static final String TILE_WIDTH_PROPERTY = "tilewidth";
+	public static final String TILE_HEIGHT_PROPERTY = "tileheight";
+	public static final String PLAYER_START_X_PROPERTY = "playerStartX";
+	public static final String PLAYER_START_Y_PROPERTY = "playerStartY";
 	TiledMap map;
 	TiledMapRenderer renderer;
 	Body collision;
@@ -96,5 +101,19 @@ public class Level {
 
 	public void act(float deltatime) {
 
+	}
+
+	public int getPlayerStartX() {
+		return
+			Integer.parseInt(map.getProperties().get(PLAYER_START_X_PROPERTY, "0", String.class)) *
+			map.getProperties().get(TILE_WIDTH_PROPERTY, 0, Integer.class);
+	}
+
+	public int getPlayerStartY() {
+		// y-down, so flip.
+		return
+				(map.getProperties().get(MAP_HEIGHT_PROPERTY, 0, Integer.class) -
+				Integer.parseInt(map.getProperties().get(PLAYER_START_Y_PROPERTY, "0", String.class))) *
+			map.getProperties().get(TILE_HEIGHT_PROPERTY, 0, Integer.class);
 	}
 }
