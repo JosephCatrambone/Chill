@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.josephcatrambone.metalskyarena.MainGame;
 
 import java.util.Stack;
 
@@ -63,7 +64,9 @@ public class Player extends Pawn {
 	}
 
 	public void kill() {
-
+		this.state = State.DEAD;
+		this.stateTime = 0;
+		MainGame.switchState(MainGame.GameState.GAME_OVER);
 	}
 
 	@Override
@@ -91,11 +94,13 @@ public class Player extends Pawn {
 				if(keycode == Input.Keys.A) { directionStack.push(Direction.LEFT); }
 				if(keycode == Input.Keys.S) { directionStack.push(Direction.DOWN); }
 
-				if(!directionStack.empty()) {
-					ref.direction = directionStack.peek();
-					ref.state = State.MOVING;
-				} else {
-					ref.state = State.IDLE;
+				if(ref.state != State.DEAD) {
+					if (!directionStack.empty()) {
+						ref.direction = directionStack.peek();
+						ref.state = State.MOVING;
+					} else {
+						ref.state = State.IDLE;
+					}
 				}
 				return true;
 			}
@@ -106,11 +111,13 @@ public class Player extends Pawn {
 				if(keycode == Input.Keys.A) { directionStack.remove(Direction.LEFT); }
 				if(keycode == Input.Keys.S) { directionStack.remove(Direction.DOWN); }
 				// Keep looking the way we were if there are no keys.
-				if(!directionStack.empty()) {
-					ref.direction = directionStack.peek();
-					ref.state = State.MOVING;
-				} else {
-					ref.state = State.IDLE;
+				if(ref.state != State.DEAD) {
+					if (!directionStack.empty()) {
+						ref.direction = directionStack.peek();
+						ref.state = State.MOVING;
+					} else {
+						ref.state = State.IDLE;
+					}
 				}
 				return true;
 			}

@@ -6,13 +6,16 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.josephcatrambone.metalskyarena.scenes.GameOverScene;
 import com.josephcatrambone.metalskyarena.scenes.PlayScene;
 import com.josephcatrambone.metalskyarena.scenes.Scene;
+import com.josephcatrambone.metalskyarena.scenes.TitleScene;
 
 import java.util.Random;
 import java.util.Stack;
 
 public class MainGame extends ApplicationAdapter {
+	public enum GameState {TITLE, PLAY, GAME_OVER, NUM_STATES};
 	public static final Random random;
 	public static final World world;
 	public static final AssetManager assetManager;
@@ -29,9 +32,7 @@ public class MainGame extends ApplicationAdapter {
 	public void create () {
 		loadAllAssets();
 
-		Scene play = new PlayScene();
-		play.create();
-		scenes.push(play);
+		switchState(GameState.PLAY);
 	}
 
 	@Override
@@ -44,6 +45,27 @@ public class MainGame extends ApplicationAdapter {
 	public void loadAllAssets() {
 		assetManager.load("missing.png", Texture.class);
 		assetManager.load("player.png", Texture.class);
+		assetManager.load(GameOverScene.GAME_OVER_BG, Texture.class);
 		assetManager.finishLoading();
+	}
+
+	public static void switchState(GameState newState) {
+		Scene newScene = null;
+		switch(newState) {
+			case TITLE:
+				newScene = new TitleScene();
+				break;
+			case PLAY:
+				newScene = new PlayScene();
+				break;
+			case GAME_OVER:
+				newScene = new GameOverScene();
+				break;
+		}
+		if(!scenes.empty()) {
+			scenes.pop().dispose();
+		}
+		newScene.create();
+		scenes.push(newScene);
 	}
 }
