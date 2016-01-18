@@ -33,10 +33,11 @@ public class GameOverScene extends Scene {
 
 	@Override
 	public void render(float deltaTime) {
+		Gdx.gl.glClearColor(0f, 0f, 0f, 1.0f);
 		Gdx.gl.glClear(Gdx.gl.GL_COLOR_BUFFER_BIT);
 
 		batch.begin();
-		batch.draw(bg, 0, 0);
+		batch.draw(bg, 0, bg.getHeight(), bg.getWidth()*4, bg.getHeight()*4);
 		batch.end();
 	}
 

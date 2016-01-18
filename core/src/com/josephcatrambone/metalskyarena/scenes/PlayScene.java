@@ -78,6 +78,15 @@ public class PlayScene extends Scene {
 			player.heat(deltaTime);
 		}
 
+		// Touch teleporter?
+		if(regionContactListener.playerTeleport) {
+			regionContactListener.playerTeleport = false;
+			if(regionContactListener.teleportMap != null) {
+				level.load(regionContactListener.teleportMap);
+			}
+			player.teleportTo(regionContactListener.teleportX, regionContactListener.teleportY);
+		}
+
 		// Camera follows player?
 		camera.position.set(player.getX(), player.getY(), camera.position.z);
 		camera.update();

@@ -88,7 +88,13 @@ public class Pawn extends Actor {
 		Vector2 pos = physicsBody.getPosition();
 		this.setX(pos.x*PPM);
 		this.setY(pos.y*PPM);
+
+		// Handle anim
 		stateTime += deltaTime;
+		Animation anim = animations[this.state.ordinal()][this.direction.ordinal()];
+		if(anim != null) {
+			stateTime %= anim.getAnimationDuration();
+		}
 	}
 
 	@Override
@@ -100,6 +106,10 @@ public class Pawn extends Actor {
 		} else {
 			spriteBatch.draw(spriteSheet, this.getX()-this.getOriginX(), this.getY()-this.getOriginY());
 		}
+	}
+
+	public void teleportTo(float x, float y) {
+		this.getBody().setTransform(x/PPM, y/PPM, 0);
 	}
 
 	public Body getBody() {

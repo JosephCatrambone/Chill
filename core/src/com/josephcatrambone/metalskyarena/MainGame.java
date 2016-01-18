@@ -3,9 +3,11 @@ package com.josephcatrambone.metalskyarena;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.josephcatrambone.metalskyarena.actors.Player;
 import com.josephcatrambone.metalskyarena.scenes.GameOverScene;
 import com.josephcatrambone.metalskyarena.scenes.PlayScene;
 import com.josephcatrambone.metalskyarena.scenes.Scene;
@@ -32,7 +34,7 @@ public class MainGame extends ApplicationAdapter {
 	public void create () {
 		loadAllAssets();
 
-		switchState(GameState.PLAY);
+		switchState(GameState.TITLE);
 	}
 
 	@Override
@@ -44,7 +46,10 @@ public class MainGame extends ApplicationAdapter {
 
 	public void loadAllAssets() {
 		assetManager.load("missing.png", Texture.class);
-		assetManager.load("player.png", Texture.class);
+		assetManager.load(Player.PLAYER_SPRITESHEET, Texture.class);
+		assetManager.load(Player.PLAYER_COOLDOWN, Sound.class);
+		assetManager.load(Player.PLAYER_OVERHEAT, Sound.class);
+		assetManager.load(TitleScene.TITLE_BG, Texture.class);
 		assetManager.load(GameOverScene.GAME_OVER_BG, Texture.class);
 		assetManager.finishLoading();
 	}

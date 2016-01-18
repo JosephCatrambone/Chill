@@ -4,26 +4,80 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.josephcatrambone.metalskyarena.Level;
 import com.josephcatrambone.metalskyarena.actors.Player;
 
+import java.util.Map;
+
 /**
  * Created by Jo on 1/12/2016.
  */
 public class RegionContactListener implements ContactListener {
 
-	public boolean playerCooling;
+	// If these are set by a collision with a trigger, we'll do something.
+	public boolean playerCooling = false;
+
+	public boolean playerTeleport = false;
+	public int teleportX, teleportY;
+	public String teleportMap;
 
 	@Override
 	public void beginContact(Contact contact) {
-		if(playerCoolerCollision(contact)) {
-			playerCooling = true;
-			System.out.println("All cool!");
+		Fixture fa = contact.getFixtureA();
+		Fixture fb = contact.getFixtureB();
+
+		Map<String, String> ad = (Map<String, String>)fa.getUserData();
+		Map<String, String> bd = (Map<String, String>)fb.getUserData();
+
+		if(ad != null && bd != null && ad.containsKey("type") && bd.containsKey("type")) {
+			Map<String, String> playerData = null;
+			Map<String, String> objData = null;
+
+			if(ad.get("type").equals(Player.PLAYER_USER_DATA)) {
+				playerData = ad;
+				objData = bd;
+			} else if(bd.get("type").equals(Player.PLAYER_USER_DATA)) {
+				playerData = bd;
+				objData = ad;
+			} // TODO: We assume player never self-collides.
+
+			if(playerData != null) {
+				if(objData.get("type").equals(Level.COOL_TYPE)) {
+					playerCooling = true;
+				} else if(objData.get("type").equals(Level.TELEPORT_TYPE)) {
+					teleportX = Integer.parseInt(objData.get("teleportx"));
+					teleportY = Integer.parseInt(objData.get("teleporty"));
+					if(objData.containsKey("teleportmap")) {
+						teleportMap = objData.get("teleportmap");
+					}
+					playerTeleport = true;
+				}
+			}
 		}
 	}
 
 	@Override
 	public void endContact(Contact contact) {
-		if(playerCoolerCollision(contact)) {
-			playerCooling = false;
-			System.out.println("Warming up!");
+		Fixture fa = contact.getFixtureA();
+		Fixture fb = contact.getFixtureB();
+
+		Map<String, String> ad = (Map<String, String>)fa.getUserData();
+		Map<String, String> bd = (Map<String, String>)fb.getUserData();
+
+		if(ad != null && bd != null && ad.containsKey("type") && bd.containsKey("type")) {
+			Map<String, String> playerData = null;
+			Map<String, String> objData = null;
+
+			if(ad.get("type").equals(Player.PLAYER_USER_DATA)) {
+				playerData = ad;
+				objData = bd;
+			} else if(bd.get("type").equals(Player.PLAYER_USER_DATA)) {
+				playerData = bd;
+				objData = ad;
+			} // TODO: We assume player never self-collides.
+
+			if(playerData != null) {
+				if(objData.get("type").equals(Level.COOL_TYPE)) {
+					playerCooling = false;
+				}
+			}
 		}
 	}
 
@@ -35,22 +89,5 @@ public class RegionContactListener implements ContactListener {
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse) {
 
-	}
-
-	private boolean playerCoolerCollision(Contact contact) {
-		Fixture fa = contact.getFixtureA();
-		Fixture fb = contact.getFixtureB();
-
-		String ad = (String)fa.getUserData();
-		String bd = (String)fb.getUserData();
-		if(ad != null && bd != null) {
-			if(ad.equals(Player.PLAYER_USER_DATA) && bd.equals(Level.COOL_TYPE)) {
-				return true;
-			} else if(ad.equals(Level.COOL_TYPE) && bd.equals(Player.PLAYER_USER_DATA)) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 }

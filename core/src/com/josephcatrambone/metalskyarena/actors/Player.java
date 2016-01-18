@@ -1,6 +1,7 @@
 package com.josephcatrambone.metalskyarena.actors;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.josephcatrambone.metalskyarena.MainGame;
 
+import java.util.HashMap;
 import java.util.Stack;
 
 /**
@@ -19,17 +21,32 @@ public class Player extends Pawn {
 	public float walkSpeed = 6.5f;
 	public float temperature = 0;
 	public float maxTemperature = 10f;
+	public boolean startCooling = false;
+
+	public static final String PLAYER_SPRITESHEET = "player.png";
+
+	public static final String PLAYER_COOLDOWN = "cooldown.wav";
+	public static final String PLAYER_OVERHEAT = "overheat.wav";
+	public static final float OVERHEAT_SOUND_THRESHOLD = 0.7f;
+	private Sound cooldown = null;
+	private Sound overheat = null;
 
 	public Player(int x, int y) {
-		create(x, y, 8, 8, 1.0f, "player.png");
+		create(x, y, 8, 8, 1.0f, PLAYER_SPRITESHEET);
 
+		// TODO: Hard-coding animations blows.
 		TextureRegion[] frames = new TextureRegion[]{
 				new TextureRegion(this.spriteSheet, 0, 0, 16, 16),
 				new TextureRegion(this.spriteSheet, 16, 0, 16, 16)};
 		animations[State.IDLE.ordinal()][Direction.DOWN.ordinal()] = new Animation(0.1f, frames);
 
+		cooldown = MainGame.assetManager.get(PLAYER_COOLDOWN);
+		overheat = MainGame.assetManager.get(PLAYER_OVERHEAT);
+
 		// Always use first fixture for labelling contact data.
-		this.getBody().getFixtureList().get(0).setUserData(PLAYER_USER_DATA);
+		HashMap<String, String> fixtureData = new HashMap<String, String>();
+		fixtureData.put("type", PLAYER_USER_DATA);
+		this.getBody().getFixtureList().get(0).setUserData(fixtureData);
 		//this.getBody().setUserData(PLAYER_USER_DATA);
 	}
 
@@ -51,6 +68,14 @@ public class Player extends Pawn {
 	}
 
 	public void heat(float amount) {
+		startCooling = false;
+
+		// When we're about to cross the overheating threshold, play a sound.
+		if(temperature < OVERHEAT_SOUND_THRESHOLD*maxTemperature && temperature + amount > OVERHEAT_SOUND_THRESHOLD*maxTemperature) {
+			overheat.play();
+		}
+
+		// Adjust temp.
 		temperature += amount;
 		if(temperature > maxTemperature) {
 			temperature = maxTemperature;
@@ -59,6 +84,11 @@ public class Player extends Pawn {
 	}
 
 	public void cool(float amount) {
+		if(startCooling == false) {
+			startCooling = true;
+			cooldown.play();
+			overheat.stop();
+		}
 		temperature -= (temperature/2)*amount;
 		if(temperature < 0) { temperature = 0;  }
 	}
