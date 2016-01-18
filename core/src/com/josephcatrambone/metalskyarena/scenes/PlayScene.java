@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.josephcatrambone.metalskyarena.Level;
 import com.josephcatrambone.metalskyarena.MainGame;
+import com.josephcatrambone.metalskyarena.actors.Pawn;
 import com.josephcatrambone.metalskyarena.actors.Player;
 import com.josephcatrambone.metalskyarena.handlers.RegionContactListener;
 
@@ -71,6 +72,11 @@ public class PlayScene extends Scene {
 		MainGame.world.step(deltaTime, 8, 3);
 		stage.act(deltaTime);
 
+		// Reached the goal?
+		if(regionContactListener.reachedGoal) {
+			MainGame.switchState((MainGame.GameState.WIN));
+		}
+
 		// Update player's heat.
 		if(regionContactListener.playerCooling) {
 			player.cool(deltaTime);
@@ -85,6 +91,11 @@ public class PlayScene extends Scene {
 				level.load(regionContactListener.teleportMap);
 			}
 			player.teleportTo(regionContactListener.teleportX, regionContactListener.teleportY);
+		}
+
+		// How long has the player been dead?
+		if(player.state == Pawn.State.DEAD) {
+			MainGame.switchState(MainGame.GameState.GAME_OVER);
 		}
 
 		// Camera follows player?
