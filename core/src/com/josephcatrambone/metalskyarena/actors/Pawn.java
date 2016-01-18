@@ -15,7 +15,7 @@ import static com.josephcatrambone.metalskyarena.PhysicsConstants.PPM;
  * Created by Jo on 12/20/2015.
  */
 public class Pawn extends Actor {
-	public enum State {IDLE, MOVING, HIT, DEAD, NUM_STATES};
+	public enum State {IDLE, MOVING, DEAD, NUM_STATES};
 	public enum Direction {RIGHT, UP, LEFT, DOWN, NUM_DIRECTIONS}; // Purely graphical, doesn't impact physics body.
 
 	// Sounds
@@ -23,14 +23,14 @@ public class Pawn extends Actor {
 
 	// Animation
 	public final String SPRITE_SHEET_FILENAME = "missing.png";
-	Texture spriteSheet; // Don't use Image subclass or Sprite.
-	State state;
-	Direction direction;
-	Animation[][] animations; // Cartesian product of state and direction.
-	float stateTime; // How long have we been in this anim state?
+	public Texture spriteSheet; // Don't use Image subclass or Sprite.
+	public State state;
+	public Direction direction;
+	public Animation[][] animations; // Cartesian product of state and direction.
+	public float stateTime; // How long have we been in this anim state?
 
 	// Physics
-	Body physicsBody;
+	public Body physicsBody;
 
 	public Pawn() {
 		// DO NOTHING.

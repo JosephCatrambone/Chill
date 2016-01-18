@@ -18,6 +18,8 @@ public class RegionContactListener implements ContactListener {
 	public int teleportX, teleportY;
 	public String teleportMap;
 
+	public boolean reachedGoal = false;
+
 	@Override
 	public void beginContact(Contact contact) {
 		Fixture fa = contact.getFixtureA();
@@ -48,6 +50,8 @@ public class RegionContactListener implements ContactListener {
 						teleportMap = objData.get("teleportmap");
 					}
 					playerTeleport = true;
+				} else if(objData.get("type").equals(Level.GOAL_TYPE)) {
+					reachedGoal = true;
 				}
 			}
 		}

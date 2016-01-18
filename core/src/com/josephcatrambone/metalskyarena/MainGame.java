@@ -17,7 +17,7 @@ import java.util.Random;
 import java.util.Stack;
 
 public class MainGame extends ApplicationAdapter {
-	public enum GameState {TITLE, PLAY, GAME_OVER, NUM_STATES};
+	public enum GameState {TITLE, PLAY, GAME_OVER, WIN, NUM_STATES};
 	public static final Random random;
 	public static final World world;
 	public static final AssetManager assetManager;
@@ -65,6 +65,9 @@ public class MainGame extends ApplicationAdapter {
 				break;
 			case GAME_OVER:
 				newScene = new GameOverScene();
+				break;
+			case WIN:
+				newScene = new TitleScene();
 				break;
 		}
 		if(!scenes.empty()) {

@@ -35,10 +35,38 @@ public class Player extends Pawn {
 		create(x, y, 8, 8, 1.0f, PLAYER_SPRITESHEET);
 
 		// TODO: Hard-coding animations blows.
-		TextureRegion[] frames = new TextureRegion[]{
-				new TextureRegion(this.spriteSheet, 0, 0, 16, 16),
-				new TextureRegion(this.spriteSheet, 16, 0, 16, 16)};
-		animations[State.IDLE.ordinal()][Direction.DOWN.ordinal()] = new Animation(0.1f, frames);
+		// Idle
+		animations[State.IDLE.ordinal()][Direction.RIGHT.ordinal()] = new Animation(0.1f, new TextureRegion[] {
+				new TextureRegion(this.spriteSheet, 0*16, 0, 16, 16)
+		});
+		animations[State.IDLE.ordinal()][Direction.UP.ordinal()] = new Animation(0.1f, new TextureRegion[] {
+				new TextureRegion(this.spriteSheet, 2*16, 0, 16, 16)
+		});
+		animations[State.IDLE.ordinal()][Direction.LEFT.ordinal()] = new Animation(0.1f, new TextureRegion[] {
+				new TextureRegion(this.spriteSheet, 4*16, 0, 16, 16)
+		});
+		animations[State.IDLE.ordinal()][Direction.DOWN.ordinal()] = new Animation(0.1f, new TextureRegion[] {
+				new TextureRegion(this.spriteSheet, 6*16, 0, 16, 16)
+		});
+
+		// Moving
+		animations[State.MOVING.ordinal()][Direction.RIGHT.ordinal()] = new Animation(0.1f, new TextureRegion[] {
+				new TextureRegion(this.spriteSheet, 0*16, 0, 16, 16),
+				new TextureRegion(this.spriteSheet, 1*16, 0, 16, 16)
+		});
+		animations[State.MOVING.ordinal()][Direction.UP.ordinal()] = new Animation(0.1f, new TextureRegion[] {
+				new TextureRegion(this.spriteSheet, 2*16, 0, 16, 16),
+				new TextureRegion(this.spriteSheet, 3*16, 0, 16, 16)
+		});
+		animations[State.MOVING.ordinal()][Direction.LEFT.ordinal()] = new Animation(0.1f, new TextureRegion[] {
+				new TextureRegion(this.spriteSheet, 4*16, 0, 16, 16),
+				new TextureRegion(this.spriteSheet, 5*16, 0, 16, 16)
+		});
+		animations[State.MOVING.ordinal()][Direction.DOWN.ordinal()] = new Animation(0.1f, new TextureRegion[] {
+				new TextureRegion(this.spriteSheet, 6*16, 0, 16, 16),
+				new TextureRegion(this.spriteSheet, 7*16, 0, 16, 16)
+		});
+
 
 		cooldown = MainGame.assetManager.get(PLAYER_COOLDOWN);
 		overheat = MainGame.assetManager.get(PLAYER_OVERHEAT);
@@ -96,7 +124,6 @@ public class Player extends Pawn {
 	public void kill() {
 		this.state = State.DEAD;
 		this.stateTime = 0;
-		MainGame.switchState(MainGame.GameState.GAME_OVER);
 	}
 
 	@Override
