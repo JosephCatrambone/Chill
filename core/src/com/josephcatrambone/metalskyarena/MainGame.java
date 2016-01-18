@@ -5,13 +5,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.josephcatrambone.metalskyarena.actors.Player;
-import com.josephcatrambone.metalskyarena.scenes.GameOverScene;
-import com.josephcatrambone.metalskyarena.scenes.PlayScene;
-import com.josephcatrambone.metalskyarena.scenes.Scene;
-import com.josephcatrambone.metalskyarena.scenes.TitleScene;
+import com.josephcatrambone.metalskyarena.scenes.*;
 
 import java.util.Random;
 import java.util.Stack;
@@ -19,13 +15,13 @@ import java.util.Stack;
 public class MainGame extends ApplicationAdapter {
 	public enum GameState {TITLE, PLAY, GAME_OVER, WIN, NUM_STATES};
 	public static final Random random;
-	public static final World world;
+	public static World world;
 	public static final AssetManager assetManager;
 	public static final Stack<Scene> scenes;
 
 	static {
 		random = new Random();
-		world = new World(new Vector2(0, 0), true);
+		world = null;
 		assetManager = new AssetManager();
 		scenes = new Stack<Scene>();
 	}
@@ -51,6 +47,7 @@ public class MainGame extends ApplicationAdapter {
 		assetManager.load(Player.PLAYER_OVERHEAT, Sound.class);
 		assetManager.load(TitleScene.TITLE_BG, Texture.class);
 		assetManager.load(GameOverScene.GAME_OVER_BG, Texture.class);
+		assetManager.load(WinScene.WIN_BG, Texture.class);
 		assetManager.finishLoading();
 	}
 
@@ -67,7 +64,7 @@ public class MainGame extends ApplicationAdapter {
 				newScene = new GameOverScene();
 				break;
 			case WIN:
-				newScene = new TitleScene();
+				newScene = new WinScene();
 				break;
 		}
 		if(!scenes.empty()) {

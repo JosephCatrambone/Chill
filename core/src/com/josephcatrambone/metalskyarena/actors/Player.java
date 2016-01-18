@@ -67,6 +67,15 @@ public class Player extends Pawn {
 				new TextureRegion(this.spriteSheet, 7*16, 0, 16, 16)
 		});
 
+		// Dead
+		TextureRegion[] deadFrames = new TextureRegion[] {
+				new TextureRegion(this.spriteSheet, 8*16, 0, 16, 16),
+				new TextureRegion(this.spriteSheet, 9*16, 0, 16, 16)
+		};
+		animations[State.DEAD.ordinal()][Direction.RIGHT.ordinal()] = new Animation(0.5f, deadFrames);
+		animations[State.DEAD.ordinal()][Direction.UP.ordinal()] = new Animation(0.5f, deadFrames);
+		animations[State.DEAD.ordinal()][Direction.LEFT.ordinal()] = new Animation(0.5f, deadFrames);
+		animations[State.DEAD.ordinal()][Direction.DOWN.ordinal()] = new Animation(0.5f, deadFrames);
 
 		cooldown = MainGame.assetManager.get(PLAYER_COOLDOWN);
 		overheat = MainGame.assetManager.get(PLAYER_OVERHEAT);
@@ -123,7 +132,6 @@ public class Player extends Pawn {
 
 	public void kill() {
 		this.state = State.DEAD;
-		this.stateTime = 0;
 	}
 
 	@Override

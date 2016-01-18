@@ -3,7 +3,9 @@ package com.josephcatrambone.metalskyarena.scenes;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.josephcatrambone.metalskyarena.Level;
@@ -21,6 +23,7 @@ public class PlayScene extends Scene {
 	Camera camera;
 	Level level;
 	Player player;
+	float sceneChangeDelay = 2.5f;
 
 	RegionContactListener regionContactListener;
 
@@ -28,6 +31,8 @@ public class PlayScene extends Scene {
 
 	@Override
 	public void create() {
+		MainGame.world = new World(new Vector2(0, 0), true);
+
 		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight())); // Fit viewport = black bars.
 		debugRenderer = new Box2DDebugRenderer();
 
@@ -56,6 +61,7 @@ public class PlayScene extends Scene {
 	public void dispose() {
 		level.dispose();
 		stage.dispose();
+		MainGame.world.dispose();
 	}
 
 	@Override
@@ -95,7 +101,10 @@ public class PlayScene extends Scene {
 
 		// How long has the player been dead?
 		if(player.state == Pawn.State.DEAD) {
-			MainGame.switchState(MainGame.GameState.GAME_OVER);
+			sceneChangeDelay -= deltaTime;
+			if(sceneChangeDelay < 0) {
+				MainGame.switchState(MainGame.GameState.GAME_OVER);
+			}
 		}
 
 		// Camera follows player?
