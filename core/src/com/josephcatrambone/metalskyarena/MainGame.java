@@ -13,7 +13,7 @@ import java.util.Random;
 import java.util.Stack;
 
 public class MainGame extends ApplicationAdapter {
-	public enum GameState {TITLE, PLAY, GAME_OVER, WIN, NUM_STATES};
+	public enum GameState {INTRO, TITLE, HOW_TO_PLAY, PLAY, GAME_OVER, WIN, NUM_STATES};
 	public static final Random random;
 	public static World world;
 	public static final AssetManager assetManager;
@@ -30,7 +30,7 @@ public class MainGame extends ApplicationAdapter {
 	public void create () {
 		loadAllAssets();
 
-		switchState(GameState.TITLE);
+		switchState(GameState.INTRO);
 	}
 
 	@Override
@@ -45,7 +45,9 @@ public class MainGame extends ApplicationAdapter {
 		assetManager.load(Player.PLAYER_SPRITESHEET, Texture.class);
 		assetManager.load(Player.PLAYER_COOLDOWN, Sound.class);
 		assetManager.load(Player.PLAYER_OVERHEAT, Sound.class);
+		assetManager.load(IntroScene.INTRO_BG, Texture.class);
 		assetManager.load(TitleScene.TITLE_BG, Texture.class);
+		assetManager.load(HowToPlayScene.HOW_TO_PLAY, Texture.class);
 		assetManager.load(GameOverScene.GAME_OVER_BG, Texture.class);
 		assetManager.load(WinScene.WIN_BG, Texture.class);
 		assetManager.finishLoading();
@@ -54,8 +56,14 @@ public class MainGame extends ApplicationAdapter {
 	public static void switchState(GameState newState) {
 		Scene newScene = null;
 		switch(newState) {
+			case INTRO:
+				newScene = new IntroScene();
+				break;
 			case TITLE:
 				newScene = new TitleScene();
+				break;
+			case HOW_TO_PLAY:
+				newScene = new HowToPlayScene();
 				break;
 			case PLAY:
 				newScene = new PlayScene();
